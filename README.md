@@ -41,7 +41,7 @@ int main()
 
     for (auto const &article : <list-of-all-articles>)
     {
-        if (!read_articles.contains(article))
+        if (!read_articles.matches(article))
         {
             // Add non-read articles to the suggestions list.
             suggestions.push_back(article);

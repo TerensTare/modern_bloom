@@ -28,13 +28,13 @@ namespace tnt
         static_bloom(static_bloom const &) = default;
         static_bloom &operator=(static_bloom const &) = default;
 
-        /// @brief The move constructor. 
+        /// @brief The move constructor.
         CONST_SWAP static_bloom(static_bloom &&rhs) noexcept
         {
             swap(*this, rhs);
         }
 
-        /// @brief The move assignment operator. 
+        /// @brief The move assignment operator.
         CONST_SWAP static_bloom &operator=(static_bloom &&rhs) noexcept
         {
             swap(*this, rhs);
@@ -43,14 +43,14 @@ namespace tnt
 
         /// @brief Construct a new instance of the bloom filter, with a specific instance of the hash object.
         /// @param hash The hash object to use.
-        explicit constexpr static_bloom(Hash &&hash) : Hash(std::move(hash)) {}
+        explicit constexpr static_bloom(Hash const &hash) : Hash(hash) {}
 
         /// @brief Add the value into the filter.
         /// @param value The value to insert into the filter.
         constexpr void insert(T const &value) noexcept
         {
             auto const h = bucket(value);
-            bits[h >> 6] |= 1ULL << (h & 63);
+            bits[h >> 6] |= std::size_t{1} << (h & 63);
         }
 
         /// @brief Check whether the filter *might* contain the given element. Also supports transparent hash objects.
@@ -64,7 +64,7 @@ namespace tnt
                 "This type is not hashable with the given hash function!");
 
             auto const h = bucket(static_cast<U &&>(value));
-            return (bits[h >> 6] & (1ULL << (h & 63))) != 0;
+            return (bits[h >> 6] & (std::size_t{1} << (h & 63))) != 0;
         }
 
         /// @brief Remove all elements from the filter.
@@ -74,10 +74,12 @@ namespace tnt
                 bit = 0;
         }
 
-        /// @brief Swap the contents of two filters together. 
+        /// @brief Swap the contents of two filters together.
         friend CONST_SWAP void swap(static_bloom &lhs, static_bloom &rhs) noexcept
         {
-            std::swap(lhs.bits, rhs.bits);
+            auto const len = N / 64 + (N % 64) != 0;
+            for (std::size_t i{}; i < len; ++i)
+                std::swap(lhs.bits[i], rhs.bits[i]);
         }
 
     private:
@@ -90,7 +92,7 @@ namespace tnt
                 return static_cast<Hash const &>(*this)(static_cast<U &&>(value)) % N;
         }
 
-        std::uint64_t bits[N / 64 + N % 64]{};
+        std::uint64_t bits[N / 64 + (N % 64 != 0)]{};
     };
 }
 
