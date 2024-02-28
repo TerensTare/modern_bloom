@@ -20,14 +20,14 @@ function(add_test_list)
             TEST ${test}_test
             PROPERTY FAIL_REGULAR_EXPRESSION ".*FAILED.*"
         )
-        
+
         add_custom_target(
             run_${test}
             COMMAND ${CMAKE_CTEST_COMMAND} -C Debug -R ${test}_test
             DEPENDS ${test}_test
-            )
+        )
 
-            set(TEST_LIST ${TEST_LIST} ${test}_test)
+        set(TEST_LIST ${TEST_LIST} ${test}_test)
     endforeach()
 
     add_custom_target(
@@ -38,6 +38,7 @@ function(add_test_list)
 endfunction(add_test_list)
 
 add_test_list(
-    static_bloom
+    bloom_filter
     dynamic_bloom
+    static_bloom
 )

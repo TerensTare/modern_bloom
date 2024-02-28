@@ -10,7 +10,7 @@ int main()
     "general_test"_test = []
     {
         // const char * is fine here as the value is not stored
-        tnt::dynamic_bloom<char const *> bloom(100, 0.01f);
+        tnt::dynamic_bloom<char const *> bloom{100, 0.01f};
 
         bloom.insert("Hello");
 

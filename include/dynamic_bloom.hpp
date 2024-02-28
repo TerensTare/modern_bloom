@@ -21,6 +21,8 @@
 #define CONST_SWAP inline
 #endif
 
+/// @cond NO_DOXYGEN
+
 namespace tnt::utils
 {
     struct size_traits final
@@ -31,6 +33,8 @@ namespace tnt::utils
         inline static constexpr std::size_t high_shift = sizeof(std::size_t) / 2 * 8;
     };
 }
+
+/// @endcond
 
 namespace tnt
 {
@@ -125,7 +129,8 @@ namespace tnt
             return matches(static_cast<U &&>(value));
         }
 
-        /// @brief Check whether the given value *might* be present in the bloom filter. Also supports transparent hash objects.
+        /// @brief Check whether the given value *might* be present in the bloom filter. While this function can return false positives, it will never return false negatives.
+        /// Ie. `matches(x)` might be wrong, but `!matches(x)` is always correct.
         /// @param value The value to check.
         template <typename U>
         constexpr bool matches(U &&value) const noexcept

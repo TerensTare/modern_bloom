@@ -3,9 +3,11 @@
 
 This repo contains a simple implementation of a bloom filter in C++17.
 
+
 ## Introduction
 
 A bloom filter is a probabilistic data structure that is used to test whether an element is a member of a set. False positives are possible, but false negatives are not. Elements can be added to the set, but not removed.
+
 
 ## Usage
 

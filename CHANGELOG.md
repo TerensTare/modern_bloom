@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## 2024-02-28
+
+### Added
+
+- `tnt::bloom_filter<T, Hash, Allocator>` as a generalization of `tnt::static_bloom` and `tnt::dynamic_bloom`. It is advised to be used in place of the other two, as they will be deprecated in the future.
+- Tests for `tnt::bloom_filter<T, Hash, Allocator>`.
+- Support for building the documentation of the project with CMake and Doxygen. Run `cmake --build . --target docs` from the `build` directory to generate the docs.
+
+
 ## 2024-02-17
 
 ### Added

@@ -3,6 +3,8 @@
 
 #include <type_traits>
 
+/// @cond NO_DOXYGEN
+
 namespace tnt::utils
 {
     template <typename T, typename = void>
@@ -34,4 +36,13 @@ namespace tnt::utils
 
         inline static constexpr bool value = true;
     };
+
+    constexpr std::size_t next_power_of_two(std::size_t n, std::size_t i = sizeof(std::size_t)) noexcept
+    {
+        return (n & (1 << i))
+                   ? ((n & (n - 1)) ? 1 << (i + 1) : n)
+                   : next_power_of_two(n, i - 1);
+    }
 }
+
+/// @endcond

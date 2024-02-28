@@ -25,7 +25,9 @@ namespace tnt
         /// @brief The default constructor.
         static_bloom() = default;
 
+        /// @brief Copy constructor.
         static_bloom(static_bloom const &) = default;
+        /// @brief Copy assignment operator.
         static_bloom &operator=(static_bloom const &) = default;
 
         /// @brief The move constructor.
@@ -53,10 +55,20 @@ namespace tnt
             bits[h >> 6] |= std::size_t{1} << (h & 63);
         }
 
-        /// @brief Check whether the filter *might* contain the given element. Also supports transparent hash objects.
+        /// @brief Check whether the given value *might* be present in the bloom filter.
+        /// @param value The value to check.
+        /// @note This function is deprecated in favor of `matches`.
+        template <typename U>
+        [[deprecated("Use `matches` instead")]] constexpr bool contains(U &&value) const noexcept
+        {
+            return matches(static_cast<U &&>(value));
+        }
+
+        /// @brief Check whether the given value *might* be present in the bloom filter. While this function can return false positives, it will never return false negatives.
+        /// Ie. `matches(x)` might be wrong, but `!matches(x)` is always correct.
         /// @param value The value to check.
         template <typename U>
-        constexpr bool contains(U &&value) const noexcept
+        constexpr bool matches(U &&value) const noexcept
         {
             static_assert(
                 (std::is_same_v<std::decay_t<U>, T> || utils::is_transparent<Hash>::value) &&
