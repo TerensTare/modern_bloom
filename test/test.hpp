@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cinttypes>
 #include <source_location>
+#include <string>
 #include <string_view>
 
 namespace tnt::test

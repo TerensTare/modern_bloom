@@ -196,14 +196,14 @@ namespace tnt
 
             auto h = (hash & utils::size_traits::high_mask) >> utils::size_traits::high_shift;
 
-            bool found{false};
+            bool found{true};
 
             for (std::size_t i{}; i < k; ++i)
             {
                 h += i * step;
 
                 auto const index = h % m;
-                found |= (bits[index >> 6] & (std::size_t{1} << (index & 63))) != 0;
+                found = found && (bits[index >> 6] & (std::size_t{1} << (index & 63))) != 0;
             }
 
             return found;
