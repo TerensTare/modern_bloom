@@ -1,0 +1,5 @@
+@PACKAGE_INIT@
+
+set(modern_bloom_VERSION "@PROJECT_VERSION@")
+include("${CMAKE_CURRENT_LIST_DIR}/modern_bloom-targets.cmake")
+check_required_components("@PROJECT_NAME@")

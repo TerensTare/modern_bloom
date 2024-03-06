@@ -1,0 +1,17 @@
+{
+  "name": "modern-bloom",
+  "version": "0.2",
+  "description": "Bloom filters for modern C++",
+  "homepage": "https://github.com/TerensTare/modern_bloom",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

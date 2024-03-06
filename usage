@@ -1,0 +1,4 @@
+modern-bloom provides CMake targets:
+
+find_package(modern_bloom CONFIG REQUIRED)
+target_link_libraries(main PRIVATE modern_bloom::modern_bloom)
