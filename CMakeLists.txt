@@ -8,27 +8,86 @@ project(
     VERSION 0.2
 )
 
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
 add_library(modern_bloom INTERFACE)
 add_library(modern_bloom::modern_bloom ALIAS modern_bloom)
 
 target_sources(
     modern_bloom
     INTERFACE
-    include/bloom_filter.hpp
-    include/dynamic_bloom.hpp
-    include/static_bloom.hpp
-    include/internal/utils.hpp
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/bloom_filter.hpp>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/bloom_filter.hpp>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/dynamic_bloom.hpp>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/static_bloom.hpp>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/internal/utils.hpp>
 )
 
-target_include_directories(modern_bloom INTERFACE include)
+target_include_directories(
+    modern_bloom
+    INTERFACE
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/modern_bloom>
+)
 
 target_compile_features(modern_bloom INTERFACE cxx_std_17)
 
-add_subdirectory(test)
+write_basic_package_version_file(
+    modern_bloom-version.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+    ARCH_INDEPENDENT
+)
 
-option(BUILD_DOCS "Build documentation" ON)
+install(
+    TARGETS modern_bloom
+    EXPORT modern_bloom-targets
+    FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/modern_bloom
+)
 
-if(BUILD_DOCS)
+configure_package_config_file(
+    ${PROJECT_SOURCE_DIR}/cmake/modern_bloom-config.cmake.in
+    modern_bloom-config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/modern_bloom
+)
+
+export(
+    EXPORT modern_bloom-targets
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/modern_bloom-targets.cmake
+    NAMESPACE modern_bloom::
+)
+
+install(
+    EXPORT modern_bloom-targets
+    FILE modern_bloom-targets.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/modern_bloom
+    NAMESPACE modern_bloom::
+)
+
+install(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/modern_bloom-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/modern_bloom-version.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/modern_bloom
+)
+
+install(
+    DIRECTORY include/
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/modern_bloom
+)
+
+export(PACKAGE modern_bloom)
+
+option(MB_BUILD_TESTS "Build tests" ON)
+
+if(MB_BUILD_TESTS)
+    add_subdirectory(test)
+endif()
+
+option(MB_BUILD_DOCS "Build documentation" ON)
+
+if(MB_BUILD_DOCS)
     find_package(Doxygen)
 
     if(DOXYGEN_FOUND)
